@@ -1,0 +1,26 @@
+version: '3.3'
+services:   
+   wordpress:
+     image: nginxdemos/hello
+     deploy:
+      mode: replicated
+      placement:  # use for deploy all the containers on manager node instead of worker nodes
+        constraints:
+          - node.role == manager
+      replicas: 3 # number of nodes
+     networks:
+      - elb
+     restart: always
+       
+     labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginxdemos.entrypoints=web, websecure"
+      - "traefik.http.routers.nginxdemos.rule=Host(`loadbalancer.ceylonmicroservices.cloud`)"
+      - "traefik.http.routers.nginxdemos.tls=true"
+      - "traefik.http.routers.nginxdemos.tls.certresolver=production"
+      - "traefik.http.routers.nginxdemos.service=nginxdemos-service"
+      - "traefik.http.services.nginxdemos-service.loadbalancer.server.port=80"
+networks:
+  elb:
+    external:
+      name: elb
