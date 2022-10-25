@@ -27,6 +27,7 @@ services:
       - "traefik.http.services.NEW_SERVICE_NAME.loadbalancer.server.port=80"
      volumes:
       - /var/lib/docker/volumes/DOMAIN_NAME/_data:/var/www/html
+      - /var/lib/docker/volumes/wordpress.ini/_data:/usr/local/etc/php
 networks:
   elb:
     external:
